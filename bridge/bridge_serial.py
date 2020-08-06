@@ -1,4 +1,3 @@
-
 from time import time, sleep
 import os
 import threading
@@ -33,25 +32,6 @@ def serial_ports():
     return result
 
 
-# SERIE_PUERTO = serial_ports()[0] #"/dev/ttyUSB0" # "/dev/ttyACM0"
-puertos_disponibles = serial_ports()
-if not puertos_disponibles:
-    print("ERROR no se encontro ningun puerto valido ")
-    quit(1)
-SERIE_PUERTO = puertos_disponibles[0] 
-SERIE_BAUDRATE = 115200  # 19200  #57600  #
-
-
-
-
-def escuchar_redis():
-    #global grabando, test_filename_full, test_ciclos
-     # while getattr(t, "seguir", True):
-    while self.running:
-        sleep(0.2)
-  
-
-
 class BridgeSerial:
     def __init__(self):
         self.running = True
@@ -63,6 +43,14 @@ class BridgeSerial:
         self.cb = cb
 
     def connect(self):
+        # SERIE_PUERTO = serial_ports()[0] #"/dev/ttyUSB0" # "/dev/ttyACM0"
+        puertos_disponibles = serial_ports()
+        if not puertos_disponibles:
+            print("ERROR no se encontro ningun puerto valido ")
+            quit(1)
+        SERIE_PUERTO = puertos_disponibles[0]
+        SERIE_BAUDRATE = 115200  # 19200  #57600  #
+
         try:
             self.ser = serial.Serial(SERIE_PUERTO, SERIE_BAUDRATE, timeout=0.5)
         except:
@@ -85,7 +73,7 @@ class BridgeSerial:
         with self.lock:
             self.running = False
         print("deteniendo...")
-        if self.th_main.isAlive():
+        if self.th_main.is_alive():
             self.th_main.join()
         self.ser.close()
         print("detenido")
