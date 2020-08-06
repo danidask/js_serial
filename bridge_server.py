@@ -14,7 +14,8 @@ sio = socketio.Server(cors_allowed_origins='*')
 # https://python-socketio.readthedocs.io/en/latest/server.html
 static_files = {
     '/': 'templates/index.html',
-    '/static/sketch.js': 'static/sketch.js',
+    '/sketch.js': 'static/sketch.js',
+    '/js_serial.js': 'static/js_serial.js',
 }
 app = socketio.WSGIApp(sio, static_files=static_files)
 bridge_serial = BridgeSerial()
