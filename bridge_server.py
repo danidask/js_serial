@@ -17,6 +17,7 @@ static_files = {
     '/static/sketch.js': 'static/sketch.js',
 }
 app = socketio.WSGIApp(sio, static_files=static_files)
+bridge_serial = BridgeSerial()
 
 @sio.event
 def connect(sid, environ):
@@ -36,6 +37,7 @@ def disconnect(sid):
 def msg_canal_entrada(sid, data):
     print('message ', data)
     #sio.emit(canal_salida, {'response': 'my response'})
+    bridge_serial.write(data.encode())
 
 def bridge_serial_callback(msg):
     print("recibido por serie, se reenvia:")
@@ -50,8 +52,7 @@ def bridge_serial_callback(msg):
 
 
 if __name__ == '__main__':
-    bridge_serial = BridgeSerial()
-    bridge_serial.callback(bridge_serial_callback)
+    bridge_serial.set_callback(bridge_serial_callback)
     bridge_serial.connect()
     try:
         eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)

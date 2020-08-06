@@ -52,7 +52,7 @@ def handle_message(message):
 
 if __name__ == '__main__':
     bridge_serial = BridgeSerial()
-    bridge_serial.callback(bridge_serial_callback)
+    bridge_serial.set_callback(bridge_serial_callback)
     bridge_serial.connect()
     # thread1 = threading.Thread(target=prueba_sock)
     # thread1.start()

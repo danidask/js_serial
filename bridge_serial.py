@@ -1,11 +1,9 @@
-from time import time, sleep
-import os
+from time import sleep
 import threading
 import serial
 
-
-
 PREFIJOS_VALIDOS = ["USB", "ACM"]
+
 
 def serial_ports():
     """ Lists serial port names
@@ -37,9 +35,11 @@ class BridgeSerial:
         self.running = True
         self.lock = threading.Lock()
         self.sample_rate = 0.05
-        self.cb = self.print_msg
-    
-    def callback(self, cb):
+        self.cb = self._print_msg
+        self.ser = None
+        self.th_main = None
+
+    def set_callback(self, cb):
         self.cb = cb
 
     def connect(self):
@@ -53,7 +53,7 @@ class BridgeSerial:
 
         try:
             self.ser = serial.Serial(SERIE_PUERTO, SERIE_BAUDRATE, timeout=0.5)
-        except:
+        except Exception as e:
             print("ERROR no se pudo abrir el puerto {}".format(SERIE_PUERTO))
             self.running = False
             return
@@ -63,9 +63,12 @@ class BridgeSerial:
         self.th_main = threading.Thread(target=self.main)
         self.th_main.start()
 
+    def write(self, msg):
+        self.ser.write(msg)
+
     def wait(self):
         while self.running:
-            if not self.th_main.isAlive():
+            if not self.th_main.is_alive():
                 break
             sleep(1)
 
@@ -78,26 +81,26 @@ class BridgeSerial:
         self.ser.close()
         print("detenido")
 
-    def print_msg(self, msg):
-        print(msg, end='')
-
     def main(self):
         while self.running:
             sleep(self.sample_rate)
-            hay_datos_serie = 0
             try:
                 hay_datos_serie = self.ser.inWaiting()
-            except:  # OSError: [Errno 5] Input/output error
+            except OSError:  # OSError: [Errno 5] Input/output error
                 continue
             if hay_datos_serie > 0:
                 response = self.ser.read_until()  # terminator=LF, size=None Read until a termination sequence is found ('\n' by default), the sizeis exceeded or until timeout occurs.
                 # print("dato: ", response.decode('utf-8').strip())
                 try:
                     response = response.decode('utf-8')
-                except:
+                except UnicodeDecodeError:
                     print("ERROR no se pudo decodificar mensaje ¿baudrate correcto?")
                     continue
                 self.cb(response)  # dispara el callback con el mensaje
+
+    @staticmethod
+    def _print_msg(msg):
+        print(msg, end='')
 
 
 if __name__ == '__main__':
