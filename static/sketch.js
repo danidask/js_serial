@@ -8,7 +8,7 @@ function setup() {
     noCanvas();
     noLoop();
 
-    socket = io('http://192.168.1.130:5000');
+    socket = io('ws://localhost:7345');
     socket.on('connect', function() { console.log("websocket conectado") });
     socket.on('event', function(data) { console.log(data) });
     socket.on('disconnect', function() { console.log("websocket desconectado") });

@@ -40,9 +40,8 @@ def msg_canal_entrada(sid, data):
     bridge_serial.write(data.encode())
 
 def bridge_serial_callback(msg):
-    print("recibido por serie, se reenvia:")
     #print(msg)
-#https://python-socketio.readthedocs.io/en/latest/server.html#emitting-events
+    #https://python-socketio.readthedocs.io/en/latest/server.html#emitting-events
     sio.emit(canal_salida, msg)
     #temp_clients = clients # RuntimeError: Set changed size during iteration
     #for client in temp_clients:
@@ -55,7 +54,7 @@ if __name__ == '__main__':
     bridge_serial.set_callback(bridge_serial_callback)
     bridge_serial.connect()
     try:
-        eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 5000)), app)
+        eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 7345)), app)
     except (KeyboardInterrupt, SystemExit):
         pass
     bridge_serial.stop()
