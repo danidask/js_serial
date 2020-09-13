@@ -5,6 +5,8 @@ eventlet.monkey_patch()
 
 import socketio
 from bridge_serial import BridgeSerial
+import argparse
+
 
 canal_salida = "canal_servidor_cliente"
 canal_entrada = "canal_cliente_servidor"
@@ -57,8 +59,20 @@ def bridge_serial_callback(msg):
 
 
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='Launch server.')
+    parser.add_argument('-b', default='57600',
+                    help='baudrate (default: 57600)')
+    parser.add_argument('-p', default='',
+                    help='serial port (default: autodetect)')
+
+    args = parser.parse_args()
+    # print(args.p)
+    # quit(0)
+
+    baudrate = int(args.b)
+    port = args.p if args.p else None
     bridge_serial.set_callback(bridge_serial_callback)
-    bridge_serial.connect()
+    bridge_serial.connect(port=port, baudrate=baudrate)
     try:
         eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 7345)), app)
     except (KeyboardInterrupt, SystemExit):

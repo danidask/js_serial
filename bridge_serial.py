@@ -42,22 +42,21 @@ class BridgeSerial:
     def set_callback(self, cb):
         self.cb = cb
 
-    def connect(self):
+    def connect(self, port=None, baudrate=57600):
         # SERIE_PUERTO = serial_ports()[0] #"/dev/ttyUSB0" # "/dev/ttyACM0"
-        puertos_disponibles = serial_ports()
-        if not puertos_disponibles:
-            print("ERROR no se encontro ningun puerto valido ")
-            quit(1)
-        SERIE_PUERTO = puertos_disponibles[0]
-        SERIE_BAUDRATE = 57600  # 115200  # 19200  #57600  #
-
+        if port is None:
+            puertos_disponibles = serial_ports()
+            if not puertos_disponibles:
+                print("ERROR no se encontro ningun puerto valido ")
+                quit(1)
+            port = puertos_disponibles[0]
         try:
-            self.ser = serial.Serial(SERIE_PUERTO, SERIE_BAUDRATE, timeout=0.5)
+            self.ser = serial.Serial(port, baudrate, timeout=0.5)
         except Exception as e:
-            print("ERROR no se pudo abrir el puerto {}".format(SERIE_PUERTO))
+            print("ERROR no se pudo abrir el puerto {}".format(port))
             self.running = False
             return
-        print("Escuchando puerto {}".format(SERIE_PUERTO))
+        print("Listen port {} at {} bauds".format(port, baudrate))
         while self.ser.inWaiting() > 0:
             _ = self.ser.read()  # vacia buffer
         self.th_main = threading.Thread(target=self.main)
