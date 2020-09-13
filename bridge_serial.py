@@ -49,7 +49,7 @@ class BridgeSerial:
             print("ERROR no se encontro ningun puerto valido ")
             quit(1)
         SERIE_PUERTO = puertos_disponibles[0]
-        SERIE_BAUDRATE = 115200  # 19200  #57600  #
+        SERIE_BAUDRATE = 57600  # 115200  # 19200  #57600  #
 
         try:
             self.ser = serial.Serial(SERIE_PUERTO, SERIE_BAUDRATE, timeout=0.5)
@@ -64,6 +64,10 @@ class BridgeSerial:
         self.th_main.start()
 
     def write(self, msg):
+        if type(msg) is str:
+            msg = msg.encode()
+        if msg[-1] != b'\n':
+            msg+=b'\n'
         self.ser.write(msg)
 
     def wait(self):

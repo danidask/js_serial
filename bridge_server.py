@@ -20,35 +20,40 @@ static_files = {
 app = socketio.WSGIApp(sio, static_files=static_files)
 bridge_serial = BridgeSerial()
 
+
 @sio.event
 def connect(sid, environ):
     print('connect ', sid)
     clients.add(sid)
 
+
 @sio.event
 def my_message(sid, data):
     print('message ', data)
+
 
 @sio.event
 def disconnect(sid):
     print('disconnect ', sid)
     clients.discard(sid)
 
+
 @sio.on(canal_entrada)
 def msg_canal_entrada(sid, data):
     print('message ', data)
-    #sio.emit(canal_salida, {'response': 'my response'})
+    # sio.emit(canal_salida, {'response': 'my response'})
     bridge_serial.write(data.encode())
 
+
 def bridge_serial_callback(msg):
-    #print(msg)
-    #https://python-socketio.readthedocs.io/en/latest/server.html#emitting-events
+    # print(msg)
+    # https://python-socketio.readthedocs.io/en/latest/server.html#emitting-events
     sio.emit(canal_salida, msg)
-    #temp_clients = clients # RuntimeError: Set changed size during iteration
-    #for client in temp_clients:
-    #    sio.emit('status', {'msg': 'name entered the room.'}, room=client)
-        #sio.send(msg, to=client, namespace=None, callback=None)
-    #sio.emit(canal_salida, {'response': 'my response'})
+    # temp_clients = clients # RuntimeError: Set changed size during iteration
+    # for client in temp_clients:
+    #     sio.emit('status', {'msg': 'name entered the room.'}, room=client)
+    # sio.send(msg, to=client, namespace=None, callback=None)
+    # sio.emit(canal_salida, {'response': 'my response'})
 
 
 if __name__ == '__main__':
