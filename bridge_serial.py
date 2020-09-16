@@ -42,7 +42,8 @@ class BridgeSerial:
     def set_callback(self, cb):
         self.cb = cb
 
-    def connect(self, port=None, baudrate=57600):
+    def connect(self, port=None, baudrate=57600, verbose=False):
+        self.verbose = verbose
         # SERIE_PUERTO = serial_ports()[0] #"/dev/ttyUSB0" # "/dev/ttyACM0"
         if port is None:
             puertos_disponibles = serial_ports()
@@ -63,10 +64,16 @@ class BridgeSerial:
         self.th_main.start()
 
     def write(self, msg):
+        if self.verbose:
+            if type(msg) is str:
+                print("   <== " + msg.strip())
+            else:
+                print("   <== " + msg.decode().strip())
         if type(msg) is str:
             msg = msg.encode()
-        if msg[-1] != b'\n':
-            msg+=b'\n'
+        # TODO en modo json mejor no enviar fin de linea
+        # if msg[-1] != b'\n':
+        #     msg+=b'\n'
         self.ser.write(msg)
 
     def wait(self):
@@ -99,6 +106,8 @@ class BridgeSerial:
                 except UnicodeDecodeError:
                     print("ERROR no se pudo decodificar mensaje ¿baudrate correcto?")
                     continue
+                if self.verbose:
+                    print("==>    " + response.strip())
                 self.cb(response)  # dispara el callback con el mensaje
 
     @staticmethod

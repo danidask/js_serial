@@ -42,7 +42,6 @@ def disconnect(sid):
 
 @sio.on(canal_entrada)
 def msg_canal_entrada(sid, data):
-    print('message ', data)
     # sio.emit(canal_salida, {'response': 'my response'})
     bridge_serial.write(data.encode())
 
@@ -60,19 +59,20 @@ def bridge_serial_callback(msg):
 
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='Launch server.')
-    parser.add_argument('-b', default='57600',
+    parser.add_argument('-b', '--baudrate', default='57600', type=int,
                     help='baudrate (default: 57600)')
-    parser.add_argument('-p', default='',
+    parser.add_argument('-p', '--port',  default='',
                     help='serial port (default: autodetect)')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Prints messages')
 
     args = parser.parse_args()
-    # print(args.p)
+    # print(args.baudrate)
+    # print(type(args.baudrate))
     # quit(0)
 
-    baudrate = int(args.b)
-    port = args.p if args.p else None
+    port = args.port if args.port else None
     bridge_serial.set_callback(bridge_serial_callback)
-    bridge_serial.connect(port=port, baudrate=baudrate)
+    bridge_serial.connect(port=port, baudrate=args.baudrate, verbose=args.verbose)
     try:
         eventlet.wsgi.server(eventlet.listen(('0.0.0.0', 7345)), app)
     except (KeyboardInterrupt, SystemExit):
