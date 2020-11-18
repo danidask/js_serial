@@ -34,7 +34,7 @@ class BridgeSerial:
     def __init__(self):
         self.running = True
         self.lock = threading.Lock()
-        self.sample_rate = 0.05
+        self.sample_rate = 0.02
         self.cb = self._print_msg
         self.ser = None
         self.th_main = None

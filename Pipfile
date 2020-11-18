@@ -4,14 +4,12 @@ url = "https://pypi.org/simple"
 verify_ssl = true
 
 [dev-packages]
+pylint = "*"
 
 [packages]
 eventlet = "*"
 python-socketio = "*"
 pyserial = "*"
-pylint = "*"
-flask = "*"
-flask-socketio = "*"
 
 [requires]
-python_version = "3.7"
+python_version = ">=3.6"

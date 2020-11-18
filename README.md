@@ -5,3 +5,6 @@ https://github.com/miguelgrinberg/Flask-SocketIO/blob/e024b7ec9db4837196d8a46ad1
 
 
 https://python-socketio.readthedocs.io/en/latest/index.html
+
+TODO
+reformat into python module
