@@ -35,6 +35,8 @@
   - [Prerequisites](#prerequisites)
   - [Installation or upgrade](#installation-or-upgrade)
 - [How to use](#how-to-use)
+  - [Lauch Bridge](#lauch-bridge)
+  - [JavaScript library](#javascript-library)
 - [Contributing](#contributing)
 - [License](#license)
 - [TODO](#todo)
@@ -65,9 +67,17 @@ pip install git+https://github.com/danidask/js_serial --upgrade
 
 # How to use
 
+## Lauch Bridge
+
 ```sh
 js_serial -h
 ```
+
+
+## JavaScript library
+
+- [JavaScript library](https://github.com/danidask/js_serial/tree/master/static)
+- [Templates](https://github.com/danidask/js_serial/tree/master/templates)
 
 
 
