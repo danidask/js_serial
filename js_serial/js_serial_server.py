@@ -4,9 +4,8 @@ import eventlet
 eventlet.monkey_patch()
 
 import socketio
-from bridge_serial import BridgeSerial
 import argparse
-
+from .js_serial_serial import BridgeSerial
 
 canal_salida = "canal_servidor_cliente"
 canal_entrada = "canal_cliente_servidor"
@@ -57,18 +56,12 @@ def bridge_serial_callback(msg):
     # sio.emit(canal_salida, {'response': 'my response'})
 
 
-if __name__ == '__main__':
+def main():
     parser = argparse.ArgumentParser(description='Launch server.')
-    parser.add_argument('-b', '--baudrate', default='57600', type=int,
-                    help='baudrate (default: 57600)')
-    parser.add_argument('-p', '--port',  default='',
-                    help='serial port (default: autodetect)')
+    parser.add_argument('-b', '--baudrate', default='57600', type=int, help='baudrate (default: 57600)')
+    parser.add_argument('-p', '--port',  default='', help='serial port (default: autodetect)')
     parser.add_argument('-v', '--verbose', action='store_true', help='Prints messages')
-
     args = parser.parse_args()
-    # print(args.baudrate)
-    # print(type(args.baudrate))
-    # quit(0)
 
     port = args.port if args.port else None
     bridge_serial.set_callback(bridge_serial_callback)
@@ -78,3 +71,7 @@ if __name__ == '__main__':
     except (KeyboardInterrupt, SystemExit):
         pass
     bridge_serial.stop()
+
+
+if __name__ == '__main__':
+    main()

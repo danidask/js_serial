@@ -48,13 +48,13 @@ class BridgeSerial:
         if port is None:
             puertos_disponibles = serial_ports()
             if not puertos_disponibles:
-                print("ERROR no se encontro ningun puerto valido ")
+                print("ERROR no ports found. Use -p to specify a port")
                 quit(1)
             port = puertos_disponibles[0]
         try:
             self.ser = serial.Serial(port, baudrate, timeout=0.5)
         except Exception as e:
-            print("ERROR no se pudo abrir el puerto {}".format(port))
+            print("ERROR couln't open port {}".format(port))
             self.running = False
             return
         print("Listen port {} at {} bauds".format(port, baudrate))
