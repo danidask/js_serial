@@ -39,7 +39,6 @@
   - [JavaScript library](#javascript-library)
 - [Contributing](#contributing)
 - [License](#license)
-- [TODO](#todo)
 - [Notes](#notes)
 
 
@@ -97,11 +96,6 @@ Contributions are what make the open source community such an amazing place to b
 
 Distributed under the MIT License. See `LICENSE` for more information.
 
-
-
-# TODO
-
-Add autodiscover for windows and mac
 
 
 

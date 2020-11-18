@@ -1,8 +1,8 @@
 from time import sleep
 import threading
 import serial
-
-PREFIJOS_VALIDOS = ["USB", "ACM"]
+import glob
+import sys
 
 
 def serial_ports():
@@ -12,13 +12,18 @@ def serial_ports():
         :returns:
             A list of the serial ports available on the system
     """
-    import glob
-    # asumimos que la plataforma es linux
-    # this excludes your current terminal "/dev/tty"
-    ports = glob.glob('/dev/tty[A-Za-z]*')
-    # quitar AMA0 que es el GPIO de la RPi
-    if '/dev/ttyAMA0' in ports:
-        ports.remove('/dev/ttyAMA0')
+    if sys.platform.startswith('win'):
+        ports = ['COM%s' % (i + 1) for i in range(256)]
+    elif sys.platform.startswith('linux') or sys.platform.startswith('cygwin'):
+        # this excludes your current terminal "/dev/tty"
+        ports = glob.glob('/dev/tty[A-Za-z]*')
+        # remove AMA0 (Raspberry Pi GPIO)
+        if '/dev/ttyAMA0' in ports:
+            ports.remove('/dev/ttyAMA0')
+    elif sys.platform.startswith('darwin'):
+        ports = glob.glob('/dev/tty.*')
+    else:
+        raise EnvironmentError('Unsupported platform')
     result = []
     for port in ports:
         try:
@@ -44,7 +49,6 @@ class BridgeSerial:
 
     def connect(self, port=None, baudrate=57600, verbose=False):
         self.verbose = verbose
-        # SERIE_PUERTO = serial_ports()[0] #"/dev/ttyUSB0" # "/dev/ttyACM0"
         if port is None:
             puertos_disponibles = serial_ports()
             if not puertos_disponibles:
@@ -85,11 +89,11 @@ class BridgeSerial:
     def stop(self):
         with self.lock:
             self.running = False
-        print("deteniendo...")
+        print("stopping...")
         if self.th_main.is_alive():
             self.th_main.join()
         self.ser.close()
-        print("detenido")
+        print("stopped")
 
     def main(self):
         while self.running:
@@ -104,7 +108,7 @@ class BridgeSerial:
                 try:
                     response = response.decode('utf-8')
                 except UnicodeDecodeError:
-                    print("ERROR no se pudo decodificar mensaje ¿baudrate correcto?")
+                    print("ERROR couldn't decode message. Check baudrate")
                     continue
                 if self.verbose:
                     print("==>    " + response.strip())
