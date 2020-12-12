@@ -1,5 +1,5 @@
 from setuptools import setup, find_packages
-from kicad_tools import __version__
+from js_serial import __version__
 
 setup(
     name='js_serial',
