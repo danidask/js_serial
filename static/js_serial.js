@@ -11,13 +11,13 @@ class JsSerial {
             console.log("websocket connected");
             this.connected = true;
             if (this.connect_cb)
-                this.connect_cb()
+                this.connect_cb();
          });
         this.socket.on('disconnect', () => { 
             console.log("websocket disconnected");
             this.connected = false;
             if (this.disconnect_cb)
-                this.disconnect_cb()
+                this.disconnect_cb();
         });
         this.socket.on('event', function(data) { console.log(data) });
     }
@@ -45,10 +45,9 @@ class JsSerial {
 
     write(msg) {
         if (typeof msg === 'object')
-            msg = JSON.stringify(msg)
-        else if (typeof msg != 'string'){
-            msg = String(msg)
-        }
+            msg = JSON.stringify(msg);
+        else if (typeof msg != 'string')
+            msg = String(msg);
         this.socket.emit(output_channel, msg);
     }
 
