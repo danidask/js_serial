@@ -37,6 +37,7 @@
 - [How to use](#how-to-use)
   - [Lauch Bridge](#lauch-bridge)
   - [JavaScript library](#javascript-library)
+  - [Example code](#example-code)
 - [Contributing](#contributing)
 - [License](#license)
 - [Notes](#notes)
@@ -79,6 +80,9 @@ js_serial -h
 - [Templates](https://github.com/danidask/js_serial/tree/master/templates)
 
 
+## Example code
+
+- [Arduino](https://github.com/danidask/js_serial/tree/master/arduino_examples)
 
 # Contributing
 

@@ -11,17 +11,17 @@ function setup() {
     serial.on('data', gotData);
 
     output_div = createDiv("Waiting...");
-    createButton("Send").mousePressed(ejemplo_boton);
+    createButton("Send").mousePressed(buttonExample);
 }
 
-function ejemplo_boton() {
+function buttonExample() {
     msg = "test message"
-    console.log("sent: '" + msg + "' channel " + canal_salida);
+    console.log("sent: '" + msg);
     serial.write(msg);
 }
 
 function gotData(data) {
     output_div.html(data);
     // let jdata = JSON.parse(data);
-    //if (typeof(jdata.value) != "undefined"){
+    //if (typeof(jdata.value) != "undefined"){ ... }
 }

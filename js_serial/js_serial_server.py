@@ -7,8 +7,8 @@ import socketio
 import argparse
 from .js_serial_serial import BridgeSerial
 
-canal_salida = "canal_servidor_cliente"
-canal_entrada = "canal_cliente_servidor"
+output_channel = "ch_srv_clnt"
+input_channel = "ch_clnt_srv"
 clients = set()
 
 sio = socketio.Server(cors_allowed_origins='*')
@@ -39,28 +39,28 @@ def disconnect(sid):
     clients.discard(sid)
 
 
-@sio.on(canal_entrada)
-def msg_canal_entrada(sid, data):
-    # sio.emit(canal_salida, {'response': 'my response'})
+@sio.on(input_channel)
+def msg_input_channel(sid, data):
+    # sio.emit(output_channel, {'response': 'my response'})
     bridge_serial.write(data.encode())
 
 
 def bridge_serial_callback(msg):
     # print(msg)
     # https://python-socketio.readthedocs.io/en/latest/server.html#emitting-events
-    sio.emit(canal_salida, msg)
+    sio.emit(output_channel, msg)
     # temp_clients = clients # RuntimeError: Set changed size during iteration
     # for client in temp_clients:
     #     sio.emit('status', {'msg': 'name entered the room.'}, room=client)
     # sio.send(msg, to=client, namespace=None, callback=None)
-    # sio.emit(canal_salida, {'response': 'my response'})
+    # sio.emit(output_channel, {'response': 'my response'})
 
 
 def main():
     parser = argparse.ArgumentParser(description='Launch server.')
     parser.add_argument('-b', '--baudrate', default='57600', type=int, help='baudrate (default: 57600)')
     parser.add_argument('-p', '--port',  default='', help='serial port (default: autodetect)')
-    parser.add_argument('-v', '--verbose', action='store_true', help='Prints messages')
+    parser.add_argument('-v', '--verbose', action='store_true', help='Ouputs messages')
     args = parser.parse_args()
 
     port = args.port if args.port else None
